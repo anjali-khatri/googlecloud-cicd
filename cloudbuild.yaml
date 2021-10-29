@@ -41,9 +41,4 @@ steps:
       - -c
       - |
         ./scripts/create_binary_authorization.sh
-substitutions:
-   _REPO_NAME: "vuln-image-list"
-   _REPO_IMAGE: "vuln-image"
-   _VERSION: "latest"
-   _SEVERITY: "CRITICAL"
 images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_REPO_IMAGE:$_VERSION']

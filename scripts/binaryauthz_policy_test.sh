@@ -11,8 +11,6 @@ GKE_Test_Cluster_Config=gke_${PROJECT_ID}_${LOCATION}_${GKE_Test_Cluster_Name}
 GKE_Staging_Cluster_Config=gke_${PROJECT_ID}_${LOCATION}_${GKE_Staging_Cluster_Name}
 GKE_Prod_Cluster_Config=gke_${PROJECT_ID}_${LOCATION}_${GKE_Prod_Cluster_Name}
 
-#Everything works above this line
-
 #OPTIONAL - TESTING ONLY
 #This step is supposed to run in cloud deploy skaffold.yaml file. 
 #But to test via the latest binary authorization policy, create a pod directly in your GKE cluster to validate binary authorization allows the recently signed ${CONTAINER_IMAGE_DIGEST_PATH}.
@@ -23,8 +21,8 @@ GKE_Prod_Cluster_Config=gke_${PROJECT_ID}_${LOCATION}_${GKE_Prod_Cluster_Name}
 kubectl config use-context $GKE_Test_Cluster_Config
 kubectl delete ns $GKE_NS
 kubectl create ns $GKE_NS
-sleep 10s
 kubectl run test-pod -n $GKE_NS --image=$CONTAINER_IMAGE_DIGEST_PATH
+sleep 5s
 #
 #Validate the pod is running within the GKE_NS.
 #
@@ -35,8 +33,8 @@ kubectl get pods -n $GKE_NS
 kubectl config use-context $GKE_Staging_Cluster_Config
 kubectl delete ns $GKE_NS
 kubectl create ns $GKE_NS
-sleep 10s
 kubectl run test-pod -n $GKE_NS --image=$CONTAINER_IMAGE_DIGEST_PATH
+sleep 5s
 #
 #Validate the pod is running within the GKE_NS.
 #
@@ -47,8 +45,8 @@ kubectl get pods -n $GKE_NS
 kubectl config use-context $GKE_Prod_Cluster_Config
 kubectl delete ns $GKE_NS
 kubectl create ns $GKE_NS
-sleep 10s
 kubectl run test-pod -n $GKE_NS --image=$CONTAINER_IMAGE_DIGEST_PATH
+sleep 5s
 #
 #Validate the pod is running within the GKE_NS.
 #
