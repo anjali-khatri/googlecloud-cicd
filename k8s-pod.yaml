@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
- name: vuln-image
+ name: vuln-images
 spec:
  containers:
  - name: test-pod
