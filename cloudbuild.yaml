@@ -26,7 +26,6 @@ steps:
        gcloud artifacts docker images list-vulnerabilities $(cat /workspace/scan_id.txt) \
        --format='value(vulnerability.effectiveSeverity)' | if grep -Fxq $_SEVERITY; \
        then echo 'Vulnerability check failed for docker image "$_REPO_NAME:$_VERSION", and will not be pushed to Artifact Registry because many "$_SEVERITY" checks are impacting the image and needs to fixed' && exit 1; else exit 0; fi
-       gcloud artifacts repositories create $_REPO_NAME --repository-format=Docker --location=us-central1 --description="Artifact Registry for GCP CICD Blog" --async
    - id: Push Image to Artifact Registry
      name: gcr.io/cloud-builders/docker
      entrypoint: /bin/bash
@@ -34,11 +33,11 @@ steps:
      - -c
      - |
        docker push us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_REPO_IMAGE:$_VERSION
-   - id: Create Binary Authorization & Custom Policy for Image
+   - id: Apply Binary Authorization Custom Policy for Image
      name: 'gcr.io/cloud-builders/gcloud'
      entrypoint: '/bin/sh'
      args:
       - -c
       - |
-        ./scripts/create_binary_authorization.sh
+        ./scripts/create_binauthz_policy.sh
 images: ['us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_REPO_IMAGE:$_VERSION']
