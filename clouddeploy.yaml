@@ -1,36 +1,41 @@
-apiVersion: deploy.cloud.google.com/v1beta1
+apiVersion: deploy.cloud.google.com/v1
 kind: DeliveryPipeline
-metadata: null
-name: cd-blog-cicd
-description: CICD Application pipeline
-serialPipeline: null
-stages:
-  - targetId: dev
-    profiles: []
-  - targetId: prod
-    profiles: []
----
- 
-apiVersion: deploy.cloud.google.com/v1beta1
-kind: Target
 metadata:
-name: dev
-description: development cluster
-gkeCluster:
- 
-project: anjali-cicd
-cluster: dev
-location: us-central1
- 
+ name: ci-cd-test
+description: main application pipeline
+serialPipeline:
+ stages:
+ - targetId: test
+   profiles: []
+ - targetId: staging
+   profiles: []
+ - targetId: prod
+   profiles: []
 ---
 
-apiVersion: deploy.cloud.google.com/v1beta1
+apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
-name: prod
+ name: test
+description: development cluster
+gke:
+ cluster: projects/unified-gift-349415/locations/us-central1-c/clusters/test
+---
+
+
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: staging
+description: staging cluster
+gke:
+ cluster: projects/unified-gift-349415/locations/us-central1-c/clusters/staging
+---
+
+apiVersion: deploy.cloud.google.com/v1
+kind: Target
+metadata:
+ name: prod
 description: production cluster
-gkeCluster:
- 
-project: anjali-cicd
-cluster: prod
-location: us-central1
+gke:
+ cluster: projects/unified-gift-349415/locations/us-central1-c/clusters/prod
