@@ -1,6 +1,6 @@
 
 LOCATION=us-central1
-PROJECT_ID=anjali-cicd
+PROJECT_ID=$(gcloud config list --format 'value(core.project)')
 ATTESTOR_ID=cb-attestor
 GKE_Staging_Cluster_Name=staging
 GKE_Prod_Cluster_Name=prod
@@ -16,6 +16,12 @@ CONTAINER_PATH=$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE:$TAG
 DIGEST_CONTAINER_PATH=$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE
 DIGEST=$(gcloud container images describe ${CONTAINER_PATH} --format='get(image_summary.digest)')
 CONTAINER_IMAGE_DIGEST_PATH=${DIGEST_CONTAINER_PATH}@${DIGEST}
+
+#KMS Key Details
+KEY_LOCATION=global
+KEYRING=vuln-keys
+KEY_NAME=cd-blog-key
+KEY_VERSION=1
 
 #To ensure everything worked as expected, you can list your attestations and the key that's assigned to that attestor for verification
 
