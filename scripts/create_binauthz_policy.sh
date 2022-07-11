@@ -2,10 +2,10 @@
 LOCATION=us-central1
 PROJECT_ID=$(gcloud config list --format 'value(core.project)')
 ATTESTOR_ID=cb-attestor
-GKE_Staging_Cluster_Name=staging
+GKE_Dev_Cluster_Name=dev
 GKE_Prod_Cluster_Name=prod
 
-GKE_BA_Policy_Staging=$LOCATION.$GKE_Staging_Cluster_Name
+GKE_BA_Policy_Dev=$LOCATION.$GKE_Dev_Cluster_Name
 GKE_BA_Policy_Prod=$LOCATION.$GKE_Prod_Cluster_Name
 
 #Container Image stored in Artifact Registry
@@ -57,7 +57,7 @@ curl "https://binaryauthorization.googleapis.com/v1/projects/${PROJECT_ID}/polic
           "evaluationMode": "ALWAYS_DENY"
       },
       "clusterAdmissionRules": {
-          "${GKE_BA_Policy_Staging}": {
+          "${GKE_BA_Policy_Dev}": {
             "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG",
             "evaluationMode": "REQUIRE_ATTESTATION",
             "requireAttestationsBy": [

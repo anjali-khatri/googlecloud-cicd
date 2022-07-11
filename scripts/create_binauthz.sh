@@ -48,7 +48,7 @@ EOF
 gcloud container binauthz attestors create $ATTESTOR_ID \
     --attestation-authority-note=$NOTE_ID \
     --attestation-authority-note-project=${PROJECT_ID}
-
+#
 #Validate the note is registered with attestor
 gcloud container binauthz attestors list
 
@@ -79,7 +79,7 @@ curl "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/$
 EOF
 
 #Enable Cloud KMS API
-gcloud services enable --project "${PROJECT_ID}" cloudkms.googleapis.com
+#gcloud services enable --project "${PROJECT_ID}" cloudkms.googleapis.com
 
 #Before you can use this attestor, your authority needs to create a cryptographic key pair that can be used to sign container images.
 #OPTIONAL: Create a keyring to hold a set of keys, if the key ring already exists, skip this step.
