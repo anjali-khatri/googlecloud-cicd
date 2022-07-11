@@ -1,11 +1,11 @@
 
 LOCATION=us-central1
-PROJECT_ID=anjali-cicd
+PROJECT_ID=$(gcloud config list --format 'value(core.project)')
 ATTESTOR_ID=cb-attestor
-GKE_Staging_Cluster_Name=staging
+GKE_Dev_Cluster_Name=dev
 GKE_Prod_Cluster_Name=prod
 
-GKE_BA_Policy_Staging=$LOCATION.$GKE_Staging_Cluster_Name
+GKE_BA_Policy_Dev=$LOCATION.$GKE_Dev_Cluster_Name
 GKE_BA_Policy_Prod=$LOCATION.$GKE_Prod_Cluster_Name
 
 #Container Image stored in Artifact Registry
@@ -16,6 +16,12 @@ CONTAINER_PATH=$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE:$TAG
 DIGEST_CONTAINER_PATH=$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$IMAGE
 DIGEST=$(gcloud container images describe ${CONTAINER_PATH} --format='get(image_summary.digest)')
 CONTAINER_IMAGE_DIGEST_PATH=${DIGEST_CONTAINER_PATH}@${DIGEST}
+
+#KMS Key Details
+KEY_LOCATION=global
+KEYRING=vuln-keys
+KEY_NAME=cd-blog-key
+KEY_VERSION=1
 
 #To ensure everything worked as expected, you can list your attestations and the key that's assigned to that attestor for verification
 
@@ -51,7 +57,7 @@ curl "https://binaryauthorization.googleapis.com/v1/projects/${PROJECT_ID}/polic
           "evaluationMode": "ALWAYS_DENY"
       },
       "clusterAdmissionRules": {
-          "${GKE_BA_Policy_Staging}": {
+          "${GKE_BA_Policy_Dev}": {
             "enforcementMode": "ENFORCED_BLOCK_AND_AUDIT_LOG",
             "evaluationMode": "REQUIRE_ATTESTATION",
             "requireAttestationsBy": [

@@ -8,7 +8,7 @@
 
 #GCP Project Logistics
 LOCATION=us-central1
-PROJECT_ID=anjali-cicd
+PROJECT_ID=$(gcloud config list --format 'value(core.project)')
 PROJECT_NUMBER=$(gcloud projects describe "${PROJECT_ID}" --format='value(projectNumber)')
 CLOUD_BUILD_SA_EMAIL="${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com"
 BINAUTHZ_SA_EMAIL="service-${PROJECT_NUMBER}@gcp-sa-binaryauthorization.iam.gserviceaccount.com"
@@ -49,11 +49,6 @@ gcloud container binauthz attestors create $ATTESTOR_ID \
     --attestation-authority-note=$NOTE_ID \
     --attestation-authority-note-project=${PROJECT_ID}
 
-#Validate the note is registered with attestor
-gcloud container binauthz attestors list
-
-
-
 #Before you can use this attestor, you must grant Binary Authorization the appropriate permissions to view the Container Analysis Note you created.
 #Make a curl request to grant the necessary IAM role
 
@@ -79,15 +74,15 @@ curl "https://containeranalysis.googleapis.com/v1/projects/${PROJECT_ID}/notes/$
 EOF
 
 #Enable Cloud KMS API
-gcloud services enable --project "${PROJECT_ID}" cloudkms.googleapis.com
+#gcloud services enable --project "${PROJECT_ID}" cloudkms.googleapis.com
 
 #Before you can use this attestor, your authority needs to create a cryptographic key pair that can be used to sign container images.
-#OPTIONAL: Create a keyring to hold a set of keys, if the key ring already exists, skip this step.
-#gcloud kms keyrings create "${KEYRING}" --location="${KEY_LOCATION}"
+#Create a keyring to hold a set of keys specific for Attestation
+gcloud kms keyrings create "${KEYRING}" --location="${KEY_LOCATION}"
 
 #Create a new asymmetric signing key pair for the attestor
-#OPTIONAL: Crate a key name that will be assigned to the above key ring. If the key already exists, skip this step.
-#gcloud kms keys create "${KEY_NAME}" --keyring="${KEYRING}" --location="${KEY_LOCATION}" --purpose asymmetric-signing --default-algorithm="ec-sign-p256-sha256"
+#Create a key name that will be assigned to the above key ring. 
+gcloud kms keys create "${KEY_NAME}" --keyring="${KEYRING}" --location="${KEY_LOCATION}" --purpose asymmetric-signing --default-algorithm="ec-sign-p256-sha256"
 
 #Now, associate the key with your authority through the gcloud binauthz command:
 
@@ -98,3 +93,6 @@ gcloud beta container binauthz attestors public-keys add  \
     --keyversion-keyring="${KEYRING}" \
     --keyversion-key="${KEY_NAME}" \
     --keyversion="${KEY_VERSION}"
+
+#Validate the note is registered with attestor with KMS key
+gcloud container binauthz attestors list
