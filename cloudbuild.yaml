@@ -17,7 +17,7 @@ steps:
      - |
        gcloud artifacts docker images scan us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_REPO_IMAGE:$_VERSION \
        --format='value(response.scan)' > /workspace/scan_id.txt
-   - id: Check For $_SEVERITY Vulnerabilities for the Image
+   - id: Check For Vulnerabilities for the Image
      name: gcr.io/cloud-builders/gcloud
      entrypoint: /bin/bash
      args:
