@@ -2,7 +2,7 @@ apiVersion: skaffold/v2beta12
 kind: Config
 build:
  artifacts:
- - image: vuln-image-skaffold-example
+ - image: vuln-image
 deploy:
  kubectl:
    manifests:
