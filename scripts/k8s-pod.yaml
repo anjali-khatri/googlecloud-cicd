@@ -5,4 +5,4 @@ metadata:
 spec:
  containers:
  - name: test-pod
-   image: us-central1-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_REPO_IMAGE:$_VERSION
+   image: us-central1-docker.pkg.dev/anjali-blog-test/vuln-image-list/vuln-image:latest
